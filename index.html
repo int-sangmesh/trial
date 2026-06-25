@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Snabbit TV — trial scheduler</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#ffeef6;overflow:hidden;}
+  #frame{display:block;border:0;width:100vw;height:100vh;}
+</style>
+</head>
+<body>
+  <iframe id="frame" allow="autoplay; fullscreen" referrerpolicy="no-referrer"></iframe>
+<script>
+  // ---- TRIAL CONFIG ----
+  // Rotation cycles through these pages in order, PHASE_MS each, then repeats.
+  var PAGES = [
+    "original.html",                                                       // normal dashboard
+    "countdown.html",                                                      // countdown-to-60K dashboard
+    "https://www.canva.com/design/DAHNjxNgkdg/qfku9xvynEL3cofIvBxaew/view?embed"  // Canva slide
+  ];
+  var PHASE_MS = 120000;   // 2 minutes per page
+  // ----------------------
+
+  var frame = document.getElementById("frame");
+  var i = -1;
+
+  function show(){
+    i = (i + 1) % PAGES.length;
+    var u = PAGES[i];
+    if (u.indexOf("canva.com") >= 0){
+      frame.src = u;                                   // Canva embed (frame-allowed)
+    } else {
+      frame.src = u + (u.indexOf("?") >= 0 ? "&" : "?") + "v=" + Date.now();  // local board, cache-busted fresh
+    }
+  }
+
+  show();                       // start on the normal dashboard
+  setInterval(show, PHASE_MS);  // auto-rotate, reloads itself, no manual touch
+</script>
+</body>
+</html>
